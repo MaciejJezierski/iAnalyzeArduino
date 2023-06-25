@@ -41,10 +41,9 @@
 #include<Button.h>
 #include <ArduinoBLE.h>
 
-BLEService iService("19B10000-E8F2-537E-4F6C-D104768A1214");
-BLECharacteristic dataCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, sizeof(float));
+BLEService iService("89a2e4f8-76cc-4bdb-81e1-14b585e66844");
+BLEFloatCharacteristic dataCharacteristic("cde86603-7243-49cd-a02e-0fc4c663e4fa", BLERead | BLENotify);
 float dataToSend = 0.0;
-
 
 void setup() {
   Serial.begin(9600);
@@ -56,37 +55,50 @@ void setup() {
   }
 
   // set advertised local name and service UUID:
+  BLE.setDeviceName("iAnalyze");
   BLE.setLocalName("iAnalyze");
-  BLE.setAdvertisedService(iService);
   iService.addCharacteristic(dataCharacteristic);
+  BLE.setAdvertisedService(iService);
   BLE.addService(iService);
-  dataCharacteristic.writeValue((uint8_t*)&dataToSend, sizeof(dataToSend));
+  // dataCharacteristic.writeValue(dataToSend);
 
   BLE.advertise();
-
+  BLE.setEventHandler(BLEConnected, blePeripheralConnectHandler);
+  BLE.setEventHandler(BLEDisconnected, blePeripheralDisconnectHandler);
   Serial.println("BLE LED Peripheral set up\n");
 }
 
 void loop() {
   BLEDevice central = BLE.central();
+BLE.poll();
+  // if (central) {
+  //   Serial.print("Connected to central: ");
+  //   Serial.println(central.address());
 
-  if (central) {
-    Serial.print("Connected to central: ");
-    Serial.println(central.address());
 
+  //   // while the central is still connected to peripheral:
+  //   while (central.connected()) {
+  //     // if the remote device wrote to the characteristic,
+  //     // use the value to control the LED:
+  //     dataToSend += 0.1;
+  //     // dataCharacteristic.writeValue(dataToSend);
+  //     Serial.print("i was here! ");
 
-    // while the central is still connected to peripheral:
-    while (central.connected()) {
-      // if the remote device wrote to the characteristic,
-      // use the value to control the LED:
-      dataToSend += 0.1;
-      dataCharacteristic.writeValue((uint8_t*)&dataToSend, sizeof(dataToSend));
-      Serial.print("i was here! ");
+  //     delay(1000);
+  //   }
 
-      delay(1000);
-    }
+  //   Serial.print(F("Disconnected from central: "));
+  //   Serial.println(central.address());
+}
 
-    Serial.print(F("Disconnected from central: "));
-    Serial.println(central.address());
-  }
+void blePeripheralConnectHandler(BLEDevice central) {
+  // central connected event handler
+  Serial.print("Connected event, central: ");
+  Serial.println(central.address());
+}
+
+void blePeripheralDisconnectHandler(BLEDevice central) {
+  // central disconnected event handler
+  Serial.print("Disconnected event, central: ");
+  Serial.println(central.address());
 }
