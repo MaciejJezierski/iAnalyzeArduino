@@ -3,7 +3,7 @@
 Software is designed to be full developed Analyzer with one exception - the oxygen sensor is being emulated with potentiometer which is basically giving same type of output as sensor (analog output of voltage) but obviosuly not giving real oxygen values. 
 
 Main funcions of the software are:
-- Making measurment and showing the results on the screen
+- Making measurments and showing the results on the screen
 - Utilising BLE connection to connect to other devices - for example iPhone running iAnalyze (https://github.com/MaciejJezierski/iAnalyze)
 - While connected to other device as peripherial, the host may run measurment randomly and get the results send using BLE.
 
