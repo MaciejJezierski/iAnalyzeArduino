@@ -1,4 +1,4 @@
-# iAnalyze for Arduino: Turn your Arduino into Oxygen Analyzer
+# iAnalyze for Arduino: Turn your Arduino board into Oxygen Analyzer
 
 Software is designed to be full developed Analyzer with one exception - the oxygen sensor is being emulated with potentiometer which is basically giving same type of output as sensor (analog output of voltage) but obviosuly not giving real oxygen values. 
 
